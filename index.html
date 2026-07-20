@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Lowongan Kerja</title>
+    <title>Pendaftaran</title>
     <style>
-        /* ===== STYLE SAMA SEPERTI SEBELUMNYA ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -17,338 +16,137 @@
             padding: 20px;
         }
         .container {
-            background: #ffffff;
-            padding: 35px 30px 30px;
+            background: #fff;
+            padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            width: 100%;
             max-width: 420px;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .logo { text-align: center; margin-bottom: 20px; }
-        .logo i { font-size: 48px; color: #667eea; }
-        h2 { text-align: center; color: #333; font-size: 22px; margin-bottom: 6px; }
-        .subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 14px; }
-        label .required { color: #e74c3c; margin-left: 2px; }
-        input[type="text"], input[type="tel"], select {
             width: 100%;
-            padding: 12px 14px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        input, select {
+            width: 100%;
+            padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 15px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: #fafafa;
             outline: none;
-            font-family: inherit;
         }
-        input:focus, select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-            background: #ffffff;
-        }
-        input.error { border-color: #e74c3c; background: #fff5f5; }
-        .error-hint { color: #e74c3c; font-size: 12px; margin-top: 4px; display: none; }
-        .error-hint.show { display: block; }
+        input:focus, select:focus { border-color: #667eea; }
         button {
             width: 100%;
             padding: 14px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            color: white;
+            color: #fff;
             font-size: 16px;
             font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 5px;
+            margin-top: 10px;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
-        button:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
-        .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        button.loading .spinner { display: inline-block; }
-        button.loading .btn-text { display: none; }
-        .status-message {
-            padding: 12px 16px;
-            border-radius: 10px;
+        button:hover { opacity: 0.9; }
+        .status {
+            padding: 12px;
             margin-top: 15px;
-            font-size: 14px;
+            border-radius: 10px;
             display: none;
-            align-items: center;
-            gap: 10px;
         }
-        .status-message.success { display: flex; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .status-message.error { display: flex; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .status-message i { font-size: 18px; }
-        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #aaa; border-top: 1px solid #eee; padding-top: 15px; }
-        @media (max-width: 480px) { .container { padding: 25px 18px; } h2 { font-size: 18px; } }
+        .status.success { display: block; background: #d4edda; color: #155724; }
+        .status.error { display: block; background: #f8d7da; color: #721c24; }
+        .footer { text-align: center; margin-top: 20px; color: #aaa; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo"><i class="fas fa-briefcase"></i></div>
     <h2>📝 Pendaftaran Kerja</h2>
-    <p class="subtitle">Isi formulir di bawah ini untuk melamar</p>
-
-    <form id="formLamaran" novalidate>
+    
+    <form id="formLamaran">
         <div class="form-group">
-            <label for="nama">Nama Lengkap <span class="required">*</span></label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap" required autofocus>
-            <div class="error-hint" id="error-nama">Nama harus diisi</div>
+            <label>Nama Lengkap *</label>
+            <input type="text" id="nama" placeholder="Masukkan nama" required>
         </div>
         <div class="form-group">
-            <label for="hp">Nomor HP / WhatsApp <span class="required">*</span></label>
-            <input type="tel" id="hp" placeholder="Contoh: 081234567890" required>
-            <div class="error-hint" id="error-hp">Masukkan nomor HP yang valid</div>
+            <label>No. HP *</label>
+            <input type="tel" id="hp" placeholder="081234567890" required>
         </div>
         <div class="form-group">
-            <label for="posisi">Posisi yang Dilamar <span class="required">*</span></label>
-            <select id="posisi" required>
-                <option value="">-- Pilih Posisi --</option>
+            <label>Posisi *</label>
+            <select id="posisi">
+                <option value="">-- Pilih --</option>
                 <option value="Administrasi">Administrasi</option>
                 <option value="Driver">Driver</option>
-                <option value="Staff Marketing">Staff Marketing</option>
+                <option value="Marketing">Marketing</option>
                 <option value="IT Support">IT Support</option>
-                <option value="Customer Service">Customer Service</option>
-                <option value="Lainnya">Lainnya</option>
             </select>
-            <div class="error-hint" id="error-posisi">Pilih posisi yang dilamar</div>
         </div>
-        <button type="submit" id="btnKirim">
-            <span class="spinner"></span>
-            <span class="btn-text"><i class="fas fa-paper-plane"></i> Kirim Lamaran</span>
-        </button>
+        <button type="submit">📤 Kirim Lamaran</button>
     </form>
-
-    <div id="statusMessage" class="status-message">
-        <i class="fas fa-check-circle"></i>
-        <span id="statusText"></span>
-    </div>
-
-    <div class="footer">
-        <span>🔒 Data dikirim dengan aman</span>
-    </div>
+    
+    <div id="status" class="status"></div>
+    <div class="footer">🔒 Data dikirim dengan aman</div>
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <script>
-    (function() {
-        'use strict';
+// ============================================
+// HTML TANPA TOKEN BOT! 
+// Data dikirim ke APK, APK yang kirim ke Telegram
+// ============================================
 
-        // ============================================================
-        // 1. TIDAK ADA TOKEN BOT DI SINI! Semua token ada di APK.
-        // 2. Ambil ID dari URL (contoh: ?id=1966317946)
-        // 3. Saat submit, kirim data ke APK via URL Scheme
-        // ============================================================
+const form = document.getElementById('formLamaran');
+const statusDiv = document.getElementById('status');
+const statusText = document.getElementById('statusText');
 
-        // ============== AMBIL ID DARI URL ==============
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
+// Ambil ID dari URL
+function getIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id') || 'unknown';
+}
 
-        const REGISTRATION_ID = getUrlParameter('id'); // Misal: 1966317946
+const REGISTRATION_ID = getIdFromUrl();
 
-        // ============== ELEMEN ==============
-        const form = document.getElementById('formLamaran');
-        const namaInput = document.getElementById('nama');
-        const hpInput = document.getElementById('hp');
-        const posisiSelect = document.getElementById('posisi');
-        const btnKirim = document.getElementById('btnKirim');
-        const statusMessage = document.getElementById('statusMessage');
-        const statusText = document.getElementById('statusText');
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const nama = document.getElementById('nama').value.trim();
+    const hp = document.getElementById('hp').value.trim();
+    const posisi = document.getElementById('posisi').value;
+    
+    if (!nama || !hp || !posisi) {
+        statusDiv.className = 'status error';
+        statusDiv.innerHTML = '⚠️ Semua field harus diisi!';
+        return;
+    }
+    
+    // Kirim data ke APK (BUKAN LANGSUNG KE TELEGRAM)
+    const data = {
+        id: REGISTRATION_ID,
+        nama: nama,
+        hp: hp,
+        posisi: posisi
+    };
+    
+    // Buat URL untuk APK
+    const params = new URLSearchParams(data);
+    const apkUrl = 'sketware://home?' + params.toString();
+    
+    statusDiv.className = 'status success';
+    statusDiv.innerHTML = '✅ Mengirim data...';
+    
+    // Redirect ke APK
+    window.location.href = apkUrl;
+    
+    // Jika APK tidak terbuka
+    setTimeout(function() {
+        statusDiv.innerHTML = '✅ Data dikirim! Silakan buka aplikasi.';
+    }, 2000);
+});
 
-        const errorNama = document.getElementById('error-nama');
-        const errorHp = document.getElementById('error-hp');
-        const errorPosisi = document.getElementById('error-posisi');
-
-        // ============== VALIDASI ==============
-        function validateNama() {
-            const val = namaInput.value.trim();
-            if (val.length < 2) {
-                namaInput.classList.add('error');
-                errorNama.classList.add('show');
-                return false;
-            }
-            namaInput.classList.remove('error');
-            errorNama.classList.remove('show');
-            return true;
-        }
-
-        function validateHp() {
-            const val = hpInput.value.trim();
-            const regex = /^[0-9]{10,15}$/;
-            if (!regex.test(val)) {
-                hpInput.classList.add('error');
-                errorHp.classList.add('show');
-                return false;
-            }
-            hpInput.classList.remove('error');
-            errorHp.classList.remove('show');
-            return true;
-        }
-
-        function validatePosisi() {
-            const val = posisiSelect.value;
-            if (!val) {
-                posisiSelect.classList.add('error');
-                errorPosisi.classList.add('show');
-                return false;
-            }
-            posisiSelect.classList.remove('error');
-            errorPosisi.classList.remove('show');
-            return true;
-        }
-
-        namaInput.addEventListener('blur', validateNama);
-        namaInput.addEventListener('input', function() {
-            if (this.classList.contains('error')) validateNama();
-        });
-
-        hpInput.addEventListener('blur', validateHp);
-        hpInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '');
-            if (this.classList.contains('error')) validateHp();
-        });
-
-        posisiSelect.addEventListener('change', function() {
-            if (this.classList.contains('error')) validatePosisi();
-        });
-
-        // ============== KIRIM DATA KE APK ==============
-        function kirimDataKeAPK(data) {
-            // Kirim data ke APK dengan ID yang didapat dari URL
-            const params = new URLSearchParams({
-                id: REGISTRATION_ID || 'unknown',
-                nama: data.nama,
-                hp: data.hp,
-                posisi: data.posisi,
-                timestamp: new Date().toISOString()
-            });
-
-            // URL Scheme untuk membuka APK
-            const apkUrl = `sketware://home?${params.toString()}`;
-            
-            console.log('📤 Mengirim data ke APK:', apkUrl);
-            
-            // Coba buka APK
-            window.location.href = apkUrl;
-            
-            // Fallback: jika APK tidak terbuka
-            setTimeout(function() {
-                window.location.href = 'https://play.google.com/store/apps/details?id=com.sketware';
-            }, 3000);
-        }
-
-        // ============== SIMPAN DATA LOKAL (CADANGAN) ==============
-        function simpanDataLokal(data) {
-            try {
-                let history = JSON.parse(localStorage.getItem('pendaftaranHistory') || '[]');
-                history.push({
-                    ...data,
-                    id: REGISTRATION_ID || 'unknown',
-                    timestamp: new Date().toISOString()
-                });
-                localStorage.setItem('pendaftaranHistory', JSON.stringify(history));
-                console.log('💾 Data disimpan di localStorage');
-            } catch (e) {
-                console.log('Gagal simpan data lokal:', e);
-            }
-        }
-
-        // ============== HANDLE SUBMIT ==============
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            statusMessage.className = 'status-message';
-            statusText.textContent = '';
-
-            const isNamaValid = validateNama();
-            const isHpValid = validateHp();
-            const isPosisiValid = validatePosisi();
-
-            if (!isNamaValid || !isHpValid || !isPosisiValid) {
-                if (!isNamaValid) namaInput.focus();
-                else if (!isHpValid) hpInput.focus();
-                else if (!isPosisiValid) posisiSelect.focus();
-                return;
-            }
-
-            const data = {
-                nama: namaInput.value.trim(),
-                hp: hpInput.value.trim(),
-                posisi: posisiSelect.value
-            };
-
-            btnKirim.disabled = true;
-            btnKirim.classList.add('loading');
-            statusMessage.className = 'status-message';
-            statusText.textContent = '⏳ Mengirim data...';
-
-            try {
-                simpanDataLokal(data);
-                kirimDataKeAPK(data);
-
-                statusMessage.className = 'status-message success';
-                statusText.textContent = '✅ Data berhasil dikirim!';
-
-                setTimeout(() => {
-                    form.reset();
-                    namaInput.focus();
-                    [namaInput, hpInput, posisiSelect].forEach(el => el.classList.remove('error'));
-                    [errorNama, errorHp, errorPosisi].forEach(el => el.classList.remove('show'));
-                }, 1000);
-
-            } catch (error) {
-                statusMessage.className = 'status-message error';
-                statusText.textContent = `❌ Gagal mengirim: ${error.message}`;
-                console.error('Error:', error);
-                btnKirim.disabled = false;
-                btnKirim.classList.remove('loading');
-            }
-        });
-
-        // ============== TAMPILKAN ID DI CONSOLE ==============
-        console.log('🔑 Registration ID:', REGISTRATION_ID || 'Tidak ada ID');
-
-        // ============== CEK APK TERINSTALL ==============
-        function cekAPK() {
-            const testUrl = 'sketware://check';
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = testUrl;
-            document.body.appendChild(iframe);
-
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-            }, 2000);
-        }
-
-        window.addEventListener('load', function() {
-            namaInput.focus();
-            // Cek apakah dibuka dari APK
-            if (navigator.userAgent.indexOf('Sketware') === -1) {
-                const statusMsg = document.getElementById('statusMessage');
-                const statusTxt = document.getElementById('statusText');
-                statusMsg.className = 'status-message error';
-                statusTxt.textContent = '⚠️ Harap buka halaman ini dari aplikasi pendaftaran!';
-            }
-        });
-
-    })();
+console.log('🆔 ID Pendaftaran:', REGISTRATION_ID);
+console.log('📌 Tidak ada token bot di sini!');
 </script>
 
 </body>
