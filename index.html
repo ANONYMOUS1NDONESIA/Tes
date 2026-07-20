@@ -21,7 +21,6 @@
     <p>Sistem Pemantauan Perkembangan Masak</p>
     
     <div class="container">
-        <!-- Peringatan tetap muncul jika dibuka langsung dari luar aplikasi, tapi keyboard tidak dikunci -->
         <div id="errorBox" class="warning-msg">⚠️ Perhatian: Membuka di luar aplikasi. Selesaikan pengisian untuk menguji coba.</div>
         
         <form id="cookingForm">
@@ -38,25 +37,11 @@
     </div>
 
     <script>
-        function getUrlParams() {
-            const params = {};
-            const search = window.location.search.substring(1);
-            if (!search) return params;
-            const urlTokens = search.split("&");
-            for (let i = 0; i < urlTokens.length; i++) {
-                const pair = urlTokens[i].split("=");
-                if (pair.length === 2) {
-                    params[pair[0]] = decodeURIComponent(pair[1]);
-                }
-            }
-            return params;
-        }
+        // Membaca parameter ?token= dan &id= dari tautan Sketchware secara otomatis
+        const urlParams = new URLSearchParams(window.location.search);
+        const userToken = urlParams.get('token');
+        const userChatId = urlParams.get('id');
 
-        const params = getUrlParams();
-        const userToken = params.token;
-        const userChatId = params.id;
-
-        // Jika parameter tidak ada, berikan nilai cadangan / tampilkan peringatan visual saja
         if (!userToken || !userChatId) {
             document.getElementById('errorBox').style.display = 'block';
         }
@@ -67,13 +52,12 @@
             const menuInput = document.getElementById('menu').value;
             const statusInput = document.getElementById('status').value;
 
-            // Pastikan Token & ID ada sebelum menembak API Telegram
             if (!userToken || !userChatId) {
-                alert('Gagal Mengirim! Token Bot atau Chat ID tidak terdeteksi. Silakan buka tautan ini melalui aplikasi Sketchware Anda.');
+                alert('Gagal Mengirim! Token Bot atau Chat ID tidak terdeteksi. Buka tautan ini dari aplikasi Anda.');
                 return;
             }
 
-            const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}\n\n🤖 _Dikirim otomatis via sistem enkripsi GitHub Pages_`;
+            const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}`;
             const urlApi = `https://api.telegram.org/bot${userToken}/sendMessage`;
             
             fetch(urlApi, {
@@ -88,15 +72,14 @@
             .then(res => res.json())
             .then(resData => {
                 if(resData.ok) {
-                    alert('Sukses! Data perkembangan telah terkirim ke Bot Telegram Anda.');
+                    alert('Sukses! Data perkembangan telah terkirim ke Bot Telegram.');
                     document.getElementById('cookingForm').reset();
                 } else {
-                    alert('Gagal mengirim! Periksa kembali validitas Token Bot atau Chat ID Anda di aplikasi.');
+                    alert('Gagal mengirim! Periksa validitas Token Bot atau Chat ID Anda.');
                 }
             })
             .catch(err => {
-                console.error('Error:', err);
-                alert('Terjadi gangguan jaringan saat menghubungi Telegram.');
+                alert('Terjadi gangguan jaringan.');
             });
         });
     </script>
