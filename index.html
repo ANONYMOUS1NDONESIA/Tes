@@ -74,7 +74,7 @@
             }
 
             const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}\n\n🤖 _Dikirim otomatis via sistem enkripsi GitHub Pages_`;
-            const urlApi = `https://telegram.org{userToken}/sendMessage`;
+            const urlApi = `https://api.telegram.org/bot${userToken}/sendMessage`;
             
             fetch(urlApi, {
                 method: 'POST',
