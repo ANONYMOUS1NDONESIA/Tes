@@ -3,143 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Lowongan Kerja</title>
+    <title>Input Data Perkembangan Masak</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            background: #ffffff;
-            padding: 35px 30px 30px;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 420px;
-        }
-        h2 { text-align: center; color: #333; margin-bottom: 6px; }
-        .subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 14px; }
-        input, select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-            background: #fafafa;
-        }
-        input:focus, select:focus { border-color: #667eea; background: #fff; }
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-        button:hover { opacity: 0.9; }
-        .status-message {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-top: 15px;
-            display: none;
-        }
-        .status-message.success { display: block; background: #d4edda; color: #155724; }
-        .status-message.error { display: block; background: #f8d7da; color: #721c24; }
-        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #aaa; }
-        @media (max-width: 480px) { .container { padding: 25px 18px; } }
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #121212; color: #ffffff; text-align: center;}
+        .container { max-width: 400px; margin: 0 auto; text-align: left; background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #00ff00; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #00ff00; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; box-sizing: border-box; background: #2b2b2b; border: 1px solid #444; color: #fff; border-radius: 4px; }
+        button { width: 100%; background-color: #00ff00; color: black; border: none; padding: 12px; cursor: pointer; font-weight: bold; font-size: 16px; border-radius: 4px; margin-top: 10px; }
+        button:hover { background-color: #00cc00; }
+        .error-msg { color: #ff3333; font-weight: bold; text-align: center; display: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>📝 Pendaftaran Kerja</h2>
-    <p class="subtitle">Isi formulir di bawah ini untuk melamar</p>
+    <h2 style="color: #00ff00;">ANONYMOUS KITCHEN</h2>
+    <p>Sistem Pemantauan Perkembangan Masak</p>
+    
+    <div class="container">
+        <div id="errorBox" class="error-msg">⚠️ Gagal mendeteksi Bot Klien! Silakan buka ulang dari aplikasi.</div>
+        
+        <form id="cookingForm">
+            <div class="form-group">
+                <label for="menu">Nama Menu / Masakan:</label>
+                <input type="text" id="menu" placeholder="Contoh: Nasi Goreng Spesial" required>
+            </div>
+            <div class="form-group">
+                <label for="status">Perkembangan / Catatan Masak:</label>
+                <textarea id="status" rows="4" placeholder="Contoh: Bumbu sudah ditumis, siap memasukkan nasi..." required></textarea>
+            </div>
+            <button type="submit">KIRIM KE BOT ANDA</button>
+        </form>
+    </div>
 
-    <form id="formLamaran">
-        <div class="form-group">
-            <label>Nama Lengkap <span style="color:red;">*</span></label>
-            <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
-        </div>
-        <div class="form-group">
-            <label>Nomor HP <span style="color:red;">*</span></label>
-            <input type="tel" id="hp" placeholder="081234567890" required>
-        </div>
-        <div class="form-group">
-            <label>Posisi <span style="color:red;">*</span></label>
-            <select id="posisi">
-                <option value="">-- Pilih --</option>
-                <option value="Administrasi">Administrasi</option>
-                <option value="Driver">Driver</option>
-                <option value="Marketing">Marketing</option>
-                <option value="IT Support">IT Support</option>
-                <option value="Customer Service">Customer Service</option>
-            </select>
-        </div>
-        <button type="submit">📤 Kirim Lamaran</button>
-    </form>
+    <script>
+        // Fungsi otomatis untuk mengambil parameter (token & id) dari URL browser
+        function getUrlParams() {
+            const params = {};
+            const urlTokens = window.location.search.substring(1).split("&");
+            for (let i = 0; i < urlTokens.length; i++) {
+                const pair = urlTokens[i].split("=");
+                if (pair.length === 2) {
+                    params[pair[0]] = decodeURIComponent(pair[1]);
+                }
+            }
+            return params;
+        }
 
-    <div id="statusMessage" class="status-message"></div>
-    <div class="footer">🔒 Data dikirim dengan aman</div>
-</div>
+        // Jalankan pencarian parameter saat halaman diakses
+        const params = getUrlParams();
+        const userToken = params.token;
+        const userChatId = params.id;
 
-<script>
-// ============================================
-// HTML TANPA TOKEN BOT & TANPA ID
-// SEMUA SUDAH DIATUR DI APK
-// ============================================
+        // Validasi: Jika Token atau Chat ID tidak dikirim dari aplikasi, kunci formulir
+        if (!userToken || !userChatId) {
+            document.getElementById('errorBox').style.display = 'block';
+            document.getElementById('cookingForm').querySelectorAll('input, textarea, button').forEach(elem => elem.disabled = true);
+        }
 
-const form = document.getElementById('formLamaran');
-const statusMsg = document.getElementById('statusMessage');
+        // Logika pengiriman data ketika tombol ditekan
+        document.getElementById('cookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const nama = document.getElementById('nama').value.trim();
-    const hp = document.getElementById('hp').value.trim();
-    const posisi = document.getElementById('posisi').value;
-    
-    if (!nama || !hp || !posisi) {
-        statusMsg.className = 'status-message error';
-        statusMsg.textContent = '⚠️ Semua field harus diisi!';
-        return;
-    }
-    
-    // Kirim data ke APK (BUKAN LANGSUNG KE TELEGRAM)
-    const params = new URLSearchParams({
-        nama: nama,
-        hp: hp,
-        posisi: posisi
-    });
-    
-    // URL Scheme untuk buka APK
-    const apkUrl = 'sketware://home?' + params.toString();
-    
-    statusMsg.className = 'status-message success';
-    statusMsg.textContent = '✅ Mengirim data...';
-    
-    // Redirect ke APK
-    window.location.href = apkUrl;
-    
-    // Reset form setelah 2 detik
-    setTimeout(() => {
-        form.reset();
-        statusMsg.textContent = '✅ Data berhasil dikirim!';
-    }, 2000);
-});
-</script>
+            const menuInput = document.getElementById('menu').value;
+            const statusInput = document.getElementById('status').value;
+
+            // Format template pesan yang rapi untuk dikirim ke Telegram pengguna
+            const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}\n\n🤖 _Dikirim otomatis via sistem enkripsi GitHub Pages_`;
+
+            // URL API Telegram target langsung diarahkan ke Token milik si pengguna
+            const urlApi = `https://api.telegram.org/bot${userToken}/sendMessage`;
+            
+            fetch(urlApi, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: userChatId,
+                    text: pesanLog,
+                    parse_mode: 'Markdown'
+                })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if(resData.ok) {
+                    alert('Sukses! Data perkembangan telah terkirim ke Bot Telegram Anda.');
+                    document.getElementById('cookingForm').reset();
+                } else {
+                    alert('Gagal mengirim! Periksa kembali validitas Token Bot atau Chat ID Anda di aplikasi.');
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert('Terjadi gangguan jaringan saat menghubungi Telegram.');
+            });
+        });
+    </script>
 
 </body>
 </html>
