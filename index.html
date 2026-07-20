@@ -9,10 +9,10 @@
         .container { max-width: 400px; margin: 0 auto; text-align: left; background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #00ff00; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; color: #00ff00; font-weight: bold; }
-        input, textarea { width: 100%; padding: 10px; box-sizing: border-box; background: #2b2b2b; border: 1px solid #444; color: #fff; border-radius: 4px; }
+        input, textarea { width: 100%; padding: 10px; box-sizing: border-box; background: #2b2b2b; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 16px; }
         button { width: 100%; background-color: #00ff00; color: black; border: none; padding: 12px; cursor: pointer; font-weight: bold; font-size: 16px; border-radius: 4px; margin-top: 10px; }
         button:hover { background-color: #00cc00; }
-        .error-msg { color: #ff3333; font-weight: bold; text-align: center; display: none; }
+        .warning-msg { color: #ffaa00; font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 14px; display: none; }
     </style>
 </head>
 <body>
@@ -21,7 +21,8 @@
     <p>Sistem Pemantauan Perkembangan Masak</p>
     
     <div class="container">
-        <div id="errorBox" class="error-msg">⚠️ Gagal mendeteksi Bot Klien! Silakan buka ulang dari aplikasi.</div>
+        <!-- Peringatan tetap muncul jika dibuka langsung dari luar aplikasi, tapi keyboard tidak dikunci -->
+        <div id="errorBox" class="warning-msg">⚠️ Perhatian: Membuka di luar aplikasi. Selesaikan pengisian untuk menguji coba.</div>
         
         <form id="cookingForm">
             <div class="form-group">
@@ -30,17 +31,18 @@
             </div>
             <div class="form-group">
                 <label for="status">Perkembangan / Catatan Masak:</label>
-                <textarea id="status" rows="4" placeholder="Contoh: Bumbu sudah ditumis, siap memasukkan nasi..." required></textarea>
+                <textarea id="status" rows="4" placeholder="Contoh: Bumbu sudah ditumis..." required></textarea>
             </div>
             <button type="submit">KIRIM KE BOT ANDA</button>
         </form>
     </div>
 
     <script>
-        // Fungsi otomatis untuk mengambil parameter (token & id) dari URL browser
         function getUrlParams() {
             const params = {};
-            const urlTokens = window.location.search.substring(1).split("&");
+            const search = window.location.search.substring(1);
+            if (!search) return params;
+            const urlTokens = search.split("&");
             for (let i = 0; i < urlTokens.length; i++) {
                 const pair = urlTokens[i].split("=");
                 if (pair.length === 2) {
@@ -50,29 +52,29 @@
             return params;
         }
 
-        // Jalankan pencarian parameter saat halaman diakses
         const params = getUrlParams();
         const userToken = params.token;
         const userChatId = params.id;
 
-        // Validasi: Jika Token atau Chat ID tidak dikirim dari aplikasi, kunci formulir
+        // Jika parameter tidak ada, berikan nilai cadangan / tampilkan peringatan visual saja
         if (!userToken || !userChatId) {
             document.getElementById('errorBox').style.display = 'block';
-            document.getElementById('cookingForm').querySelectorAll('input, textarea, button').forEach(elem => elem.disabled = true);
         }
 
-        // Logika pengiriman data ketika tombol ditekan
         document.getElementById('cookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const menuInput = document.getElementById('menu').value;
             const statusInput = document.getElementById('status').value;
 
-            // Format template pesan yang rapi untuk dikirim ke Telegram pengguna
-            const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}\n\n🤖 _Dikirim otomatis via sistem enkripsi GitHub Pages_`;
+            // Pastikan Token & ID ada sebelum menembak API Telegram
+            if (!userToken || !userChatId) {
+                alert('Gagal Mengirim! Token Bot atau Chat ID tidak terdeteksi. Silakan buka tautan ini melalui aplikasi Sketchware Anda.');
+                return;
+            }
 
-            // URL API Telegram target langsung diarahkan ke Token milik si pengguna
-            const urlApi = `https://api.telegram.org/bot${userToken}/sendMessage`;
+            const pesanLog = `=== 🍳 UPDATE PERKEMBANGAN MASAK ===\n\n📌 *Menu*: ${menuInput}\n📈 *Status*: ${statusInput}\n\n🤖 _Dikirim otomatis via sistem enkripsi GitHub Pages_`;
+            const urlApi = `https://telegram.org{userToken}/sendMessage`;
             
             fetch(urlApi, {
                 method: 'POST',
