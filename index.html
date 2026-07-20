@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran</title>
+    <title>Pendaftaran Lowongan Kerja</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -16,97 +16,93 @@
             padding: 20px;
         }
         .container {
-            background: #fff;
-            padding: 30px;
+            background: #ffffff;
+            padding: 35px 30px 30px;
             border-radius: 16px;
-            max-width: 420px;
-            width: 100%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
         }
-        h2 { text-align: center; color: #333; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
+        h2 { text-align: center; color: #333; margin-bottom: 6px; }
+        .subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; color: #555; font-weight: 600; font-size: 14px; }
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 15px;
             outline: none;
+            background: #fafafa;
         }
-        input:focus, select:focus { border-color: #667eea; }
+        input:focus, select:focus { border-color: #667eea; background: #fff; }
         button {
             width: 100%;
             padding: 14px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            color: #fff;
+            color: white;
             font-size: 16px;
             font-weight: 700;
             border-radius: 10px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         button:hover { opacity: 0.9; }
-        .status {
-            padding: 12px;
-            margin-top: 15px;
+        .status-message {
+            padding: 12px 16px;
             border-radius: 10px;
+            margin-top: 15px;
             display: none;
         }
-        .status.success { display: block; background: #d4edda; color: #155724; }
-        .status.error { display: block; background: #f8d7da; color: #721c24; }
-        .footer { text-align: center; margin-top: 20px; color: #aaa; font-size: 12px; }
+        .status-message.success { display: block; background: #d4edda; color: #155724; }
+        .status-message.error { display: block; background: #f8d7da; color: #721c24; }
+        .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #aaa; }
+        @media (max-width: 480px) { .container { padding: 25px 18px; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>📝 Pendaftaran Kerja</h2>
-    
+    <p class="subtitle">Isi formulir di bawah ini untuk melamar</p>
+
     <form id="formLamaran">
         <div class="form-group">
-            <label>Nama Lengkap *</label>
-            <input type="text" id="nama" placeholder="Masukkan nama" required>
+            <label>Nama Lengkap <span style="color:red;">*</span></label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
         </div>
         <div class="form-group">
-            <label>No. HP *</label>
+            <label>Nomor HP <span style="color:red;">*</span></label>
             <input type="tel" id="hp" placeholder="081234567890" required>
         </div>
         <div class="form-group">
-            <label>Posisi *</label>
+            <label>Posisi <span style="color:red;">*</span></label>
             <select id="posisi">
                 <option value="">-- Pilih --</option>
                 <option value="Administrasi">Administrasi</option>
                 <option value="Driver">Driver</option>
                 <option value="Marketing">Marketing</option>
                 <option value="IT Support">IT Support</option>
+                <option value="Customer Service">Customer Service</option>
             </select>
         </div>
         <button type="submit">📤 Kirim Lamaran</button>
     </form>
-    
-    <div id="status" class="status"></div>
+
+    <div id="statusMessage" class="status-message"></div>
     <div class="footer">🔒 Data dikirim dengan aman</div>
 </div>
 
 <script>
 // ============================================
-// HTML TANPA TOKEN BOT! 
-// Data dikirim ke APK, APK yang kirim ke Telegram
+// HTML TANPA TOKEN BOT & TANPA ID
+// SEMUA SUDAH DIATUR DI APK
 // ============================================
 
 const form = document.getElementById('formLamaran');
-const statusDiv = document.getElementById('status');
-const statusText = document.getElementById('statusText');
-
-// Ambil ID dari URL
-function getIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('id') || 'unknown';
-}
-
-const REGISTRATION_ID = getIdFromUrl();
+const statusMsg = document.getElementById('statusMessage');
 
 form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -116,37 +112,33 @@ form.addEventListener('submit', function(e) {
     const posisi = document.getElementById('posisi').value;
     
     if (!nama || !hp || !posisi) {
-        statusDiv.className = 'status error';
-        statusDiv.innerHTML = '⚠️ Semua field harus diisi!';
+        statusMsg.className = 'status-message error';
+        statusMsg.textContent = '⚠️ Semua field harus diisi!';
         return;
     }
     
     // Kirim data ke APK (BUKAN LANGSUNG KE TELEGRAM)
-    const data = {
-        id: REGISTRATION_ID,
+    const params = new URLSearchParams({
         nama: nama,
         hp: hp,
         posisi: posisi
-    };
+    });
     
-    // Buat URL untuk APK
-    const params = new URLSearchParams(data);
+    // URL Scheme untuk buka APK
     const apkUrl = 'sketware://home?' + params.toString();
     
-    statusDiv.className = 'status success';
-    statusDiv.innerHTML = '✅ Mengirim data...';
+    statusMsg.className = 'status-message success';
+    statusMsg.textContent = '✅ Mengirim data...';
     
     // Redirect ke APK
     window.location.href = apkUrl;
     
-    // Jika APK tidak terbuka
-    setTimeout(function() {
-        statusDiv.innerHTML = '✅ Data dikirim! Silakan buka aplikasi.';
+    // Reset form setelah 2 detik
+    setTimeout(() => {
+        form.reset();
+        statusMsg.textContent = '✅ Data berhasil dikirim!';
     }, 2000);
 });
-
-console.log('🆔 ID Pendaftaran:', REGISTRATION_ID);
-console.log('📌 Tidak ada token bot di sini!');
 </script>
 
 </body>
